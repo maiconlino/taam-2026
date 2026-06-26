@@ -322,9 +322,9 @@
       Sua avaliação é fundamental para a melhoria contínua da disciplina. Responda com sinceridade — as respostas são anônimas e serão usadas exclusivamente para fins acadêmicos.
     </div>
 
-    <form id="avaliacao-form" action="https://formspree.io/maiconheverton@gmail.com" method="POST">
+    <form id="avaliacao-form" action="https://formsubmit.co/ajax/maiconheverton@gmail.com" method="POST">
       <input type="hidden" name="_subject" value="[TAAM 2026.1] Nova avaliação de aluno" />
-      <input type="hidden" name="_next" value="obrigado" />
+      <input type="hidden" name="_captcha" value="false" />
 
       <!-- BLOCO 1: Conteúdo -->
       <div class="group">
@@ -533,7 +533,8 @@
         headers: { 'Accept': 'application/json' }
       });
 
-      if (response.ok) {
+      const json = await response.json().catch(() => ({}));
+      if (response.ok && (json.success === 'true' || json.success === true || response.ok)) {
         document.getElementById('form-area').style.display = 'none';
         document.getElementById('confirmacao').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
