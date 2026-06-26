@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avaliação da Disciplina TAAM 2026.1 — PPGEC/UPE</title>
+  <style>
+    :root {
+      --verde: #1a7f4b;
+      --verde-claro: #27ae6a;
+      --verde-bg: #e8f5ee;
+      --cinza: #4a4a5a;
+      --cinza-claro: #f0f2f5;
+      --branco: #ffffff;
+      --borda: #d0dce8;
+      --erro: #c0392b;
+      --sucesso: #16a34a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f3d26 0%, #1a6b40 50%, #0d2e1d 100%);
+      min-height: 100vh;
+      padding: 32px 16px 60px;
+      color: var(--cinza);
+    }
+
+    .card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--branco);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+    }
+
+    /* Cabeçalho */
+    .header {
+      background: linear-gradient(135deg, #1a7f4b, #0d5c33);
+      padding: 36px 36px 28px;
+      color: white;
+    }
+    .header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 14px;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+    .header .sub {
+      margin-top: 16px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .header .sub span {
+      font-size: 13px;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Corpo */
+    .body { padding: 32px 36px; }
+
+    .intro {
+      background: var(--verde-bg);
+      border-left: 4px solid var(--verde);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      font-size: 13.5px;
+      color: #1a4d30;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--verde);
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--verde-bg);
+    }
+
+    .group { margin-bottom: 36px; }
+
+    /* Campos de texto */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 7px;
+    }
+    .field label .opt {
+      font-weight: 400;
+      color: #9ca3af;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+    .field input[type="text"],
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--borda);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--cinza);
+      background: var(--branco);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .field input[type="text"]:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--verde);
+      box-shadow: 0 0 0 3px rgba(26,127,75,0.12);
+    }
+    .field textarea { resize: vertical; min-height: 90px; }
+
+    /* Rating por estrelas */
+    .star-group { margin-bottom: 20px; }
+    .star-group .q-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .stars {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .stars input[type="radio"] { display: none; }
+    .stars label {
+      cursor: pointer;
+      font-size: 30px;
+      color: #d1d5db;
+      transition: color 0.15s, transform 0.1s;
+      line-height: 1;
+      user-select: none;
+    }
+    .stars:hover label { color: #fbbf24; }
+    .stars label:hover ~ label { color: #d1d5db !important; }
+    .stars input[type="radio"]:checked ~ label { color: #d1d5db !important; }
+    .stars input[type="radio"]:checked + label,
+    .stars input[type="radio"]:checked + label ~ label { color: #d1d5db; }
+
+    /* RTL star trick */
+    .stars { direction: rtl; display: flex; justify-content: flex-end; flex-direction: row-reverse; }
+    .stars label { color: #d1d5db; }
+    .stars input[type="radio"]:checked ~ label { color: #fbbf24 !important; }
+    .stars input[type="radio"]:checked + label { color: #fbbf24 !important; }
+    .stars label:hover,
+    .stars label:hover ~ label { color: #fbbf24 !important; }
+
+    .star-desc {
+      font-size: 11.5px;
+      color: #9ca3af;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      max-width: 190px;
+    }
+
+    /* Likert scale */
+    .likert-group { margin-bottom: 20px; }
+    .likert-group .q-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 10px;
+      display: block;
+      line-height: 1.4;
+    }
+    .likert-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .likert-options input[type="radio"] { display: none; }
+    .likert-options label {
+      padding: 7px 14px;
+      border: 1.5px solid var(--borda);
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #555;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .likert-options input[type="radio"]:checked + label {
+      background: var(--verde);
+      border-color: var(--verde);
+      color: white;
+      font-weight: 600;
+    }
+    .likert-options label:hover { border-color: var(--verde-claro); background: var(--verde-bg); }
+
+    /* Submit */
+    .submit-area { margin-top: 10px; text-align: center; }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--verde), #0d5c33);
+      color: white;
+      border: none;
+      padding: 16px 48px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 4px 20px rgba(26,127,75,0.4);
+      width: 100%;
+      max-width: 320px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,127,75,0.5); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .privacy-note {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+
+    /* Confirmação */
+    #confirmacao {
+      display: none;
+      text-align: center;
+      padding: 60px 36px;
+    }
+    #confirmacao .check-icon {
+      font-size: 72px;
+      display: block;
+      margin-bottom: 20px;
+    }
+    #confirmacao h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--sucesso);
+      margin-bottom: 10px;
+    }
+    #confirmacao p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* Rodapé */
+    .footer {
+      background: var(--cinza-claro);
+      padding: 16px 36px;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      border-top: 1px solid var(--borda);
+    }
+
+    /* Required asterisk */
+    .req { color: var(--erro); margin-left: 2px; }
+
+    /* Error state */
+    .field.error input, .field.error textarea,
+    .star-group.error .stars, .likert-group.error .likert-options {
+      outline: 2px solid var(--erro);
+      border-radius: 8px;
+    }
+
+    @media (max-width: 520px) {
+      .body { padding: 24px 20px; }
+      .header { padding: 28px 20px 22px; }
+      .header h1 { font-size: 20px; }
+      .stars label { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- Cabeçalho -->
+  <div class="header">
+    <div class="badge">PPGEC · UPE</div>
+    <h1>Avaliação da Disciplina<br>TAAM 2026.1</h1>
+    <p>Técnicas Avançadas em Aprendizado de Máquina · Mestrado em Engenharia Civil</p>
+    <div class="sub">
+      <span>📅 2026.1 — semestre ativo</span>
+      <span>🔒 Resposta anônima</span>
+      <span>⏱ ~3 minutos</span>
+    </div>
+  </div>
+
+  <!-- Formulário -->
+  <div class="body" id="form-area">
+    <div class="intro">
+      Sua avaliação é fundamental para a melhoria contínua da disciplina. Responda com sinceridade — as respostas são anônimas e serão usadas exclusivamente para fins acadêmicos.
+    </div>
+
+    <form id="avaliacao-form" action="https://formspree.io/maiconheverton@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="[TAAM 2026.1] Nova avaliação de aluno" />
+      <input type="hidden" name="_next" value="obrigado" />
+
+      <!-- BLOCO 1: Conteúdo -->
+      <div class="group">
+        <div class="section-title">📚 Conteúdo Programático</div>
+
+        <div class="star-group" id="sg-relevancia">
+          <span class="q-label">Relevância e atualidade dos temas abordados <span class="req">*</span></span>
+          <div class="stars" id="stars-relevancia">
+            <input type="radio" name="relevancia" id="r5" value="5"><label for="r5">★</label>
+            <input type="radio" name="relevancia" id="r4" value="4"><label for="r4">★</label>
+            <input type="radio" name="relevancia" id="r3" value="3"><label for="r3">★</label>
+            <input type="radio" name="relevancia" id="r2" value="2"><label for="r2">★</label>
+            <input type="radio" name="relevancia" id="r1" value="1"><label for="r1">★</label>
+          </div>
+          <div class="star-desc"><span>Fraco</span><span>Excelente</span></div>
+        </div>
+
+        <div class="star-group" id="sg-carga">
+          <span class="q-label">Adequação da carga horária e volume de conteúdo <span class="req">*</span></span>
+          <div class="stars" id="stars-carga">
+            <input type="radio" name="carga_horaria" id="c5" value="5"><label for="c5">★</label>
+            <input type="radio" name="carga_horaria" id="c4" value="4"><label for="c4">★</label>
+            <input type="radio" name="carga_horaria" id="c3" value="3"><label for="c3">★</label>
+            <input type="radio" name="carga_horaria" id="c2" value="2"><label for="c2">★</label>
+            <input type="radio" name="carga_horaria" id="c1" value="1"><label for="c1">★</label>
+          </div>
+          <div class="star-desc"><span>Fraco</span><span>Excelente</span></div>
+        </div>
+
+        <div class="star-group" id="sg-material">
+          <span class="q-label">Qualidade dos materiais e recursos utilizados <span class="req">*</span></span>
+          <div class="stars" id="stars-material">
+            <input type="radio" name="material" id="m5" value="5"><label for="m5">★</label>
+            <input type="radio" name="material" id="m4" value="4"><label for="m4">★</label>
+            <input type="radio" name="material" id="m3" value="3"><label for="m3">★</label>
+            <input type="radio" name="material" id="m2" value="2"><label for="m2">★</label>
+            <input type="radio" name="material" id="m1" value="1"><label for="m1">★</label>
+          </div>
+          <div class="star-desc"><span>Fraco</span><span>Excelente</span></div>
+        </div>
+      </div>
+
+      <!-- BLOCO 2: Metodologia -->
+      <div class="group">
+        <div class="section-title">🎯 Metodologia e Didática</div>
+
+        <div class="star-group" id="sg-didatica">
+          <span class="q-label">Clareza e qualidade das explicações do professor <span class="req">*</span></span>
+          <div class="stars" id="stars-didatica">
+            <input type="radio" name="didatica" id="d5" value="5"><label for="d5">★</label>
+            <input type="radio" name="didatica" id="d4" value="4"><label for="d4">★</label>
+            <input type="radio" name="didatica" id="d3" value="3"><label for="d3">★</label>
+            <input type="radio" name="didatica" id="d2" value="2"><label for="d2">★</label>
+            <input type="radio" name="didatica" id="d1" value="1"><label for="d1">★</label>
+          </div>
+          <div class="star-desc"><span>Fraco</span><span>Excelente</span></div>
+        </div>
+
+        <div class="star-group" id="sg-praticas">
+          <span class="q-label">Equilíbrio entre teoria e atividades práticas (notebooks, exercícios) <span class="req">*</span></span>
+          <div class="stars" id="stars-praticas">
+            <input type="radio" name="praticas" id="p5" value="5"><label for="p5">★</label>
+            <input type="radio" name="praticas" id="p4" value="4"><label for="p4">★</label>
+            <input type="radio" name="praticas" id="p3" value="3"><label for="p3">★</label>
+            <input type="radio" name="praticas" id="p2" value="2"><label for="p2">★</label>
+            <input type="radio" name="praticas" id="p1" value="1"><label for="p1">★</label>
+          </div>
+          <div class="star-desc"><span>Fraco</span><span>Excelente</span></div>
+        </div>
+
+        <div class="likert-group" id="lg-dificuldade">
+          <span class="q-label">Como você avalia o nível de dificuldade da disciplina? <span class="req">*</span></span>
+          <div class="likert-options">
+            <input type="radio" name="dificuldade" id="df1" value="Muito fácil"><label for="df1">Muito fácil</label>
+            <input type="radio" name="dificuldade" id="df2" value="Adequado"><label for="df2">Adequado</label>
+            <input type="radio" name="dificuldade" id="df3" value="Desafiador"><label for="df3">Desafiador</label>
+            <input type="radio" name="dificuldade" id="df4" value="Muito difícil"><label for="df4">Muito difícil</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCO 3: Avaliação Geral -->
+      <div class="group">
+        <div class="section-title">⭐ Avaliação Geral</div>
+
+        <div class="star-group" id="sg-geral">
+          <span class="q-label">Avaliação geral da disciplina TAAM 2026.1 <span class="req">*</span></span>
+          <div class="stars" id="stars-geral">
+            <input type="radio" name="nota_geral" id="g5" value="5"><label for="g5">★</label>
+            <input type="radio" name="nota_geral" id="g4" value="4"><label for="g4">★</label>
+            <input type="radio" name="nota_geral" id="g3" value="3"><label for="g3">★</label>
+            <input type="radio" name="nota_geral" id="g2" value="2"><label for="g2">★</label>
+            <input type="radio" name="nota_geral" id="g1" value="1"><label for="g1">★</label>
+          </div>
+          <div class="star-desc"><span>Ruim</span><span>Excelente</span></div>
+        </div>
+
+        <div class="likert-group" id="lg-recomendar">
+          <span class="q-label">Você recomendaria esta disciplina para outros alunos? <span class="req">*</span></span>
+          <div class="likert-options">
+            <input type="radio" name="recomendaria" id="rec1" value="Com certeza sim"><label for="rec1">Com certeza sim</label>
+            <input type="radio" name="recomendaria" id="rec2" value="Provavelmente sim"><label for="rec2">Provavelmente sim</label>
+            <input type="radio" name="recomendaria" id="rec3" value="Talvez"><label for="rec3">Talvez</label>
+            <input type="radio" name="recomendaria" id="rec4" value="Não"><label for="rec4">Não</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCO 4: Comentários -->
+      <div class="group">
+        <div class="section-title">💬 Comentários e Sugestões</div>
+
+        <div class="field">
+          <label for="positivos">O que você mais gostou na disciplina? <span class="opt">(opcional)</span></label>
+          <textarea id="positivos" name="pontos_positivos" placeholder="Descreva os aspectos que mais contribuíram para seu aprendizado..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="melhorias">O que poderia ser melhorado? <span class="opt">(opcional)</span></label>
+          <textarea id="melhorias" name="sugestoes_melhoria" placeholder="Sugestões de tópicos, metodologia, recursos ou dinâmica das aulas..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="comentario_livre">Comentário livre <span class="opt">(opcional)</span></label>
+          <textarea id="comentario_livre" name="comentario_livre" placeholder="Qualquer outro comentário que queira compartilhar com o professor..."></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-area">
+        <button type="submit" class="btn-submit" id="btn-enviar">Enviar Avaliação →</button>
+        <p class="privacy-note">🔒 Suas respostas são anônimas e serão usadas apenas para fins acadêmicos.<br>Nenhuma informação de identificação é coletada.</p>
+      </div>
+    </form>
+  </div>
+
+  <!-- Confirmação de envio -->
+  <div id="confirmacao">
+    <span class="check-icon">✅</span>
+    <h2>Avaliação enviada!</h2>
+    <p>Obrigado pela sua contribuição.<br>Seu feedback é fundamental para a melhoria contínua da disciplina TAAM.</p>
+  </div>
+
+  <!-- Rodapé -->
+  <div class="footer">
+    PPGEC · Programa de Pós-Graduação em Engenharia Civil · UPE · 2026.1
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('avaliacao-form');
+  const btn = document.getElementById('btn-enviar');
+
+  // Campos obrigatórios de estrelas
+  const requiredStars = ['relevancia','carga_horaria','material','didatica','praticas','nota_geral'];
+  const requiredLikert = ['dificuldade','recomendaria'];
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Validação
+    let valid = true;
+
+    requiredStars.forEach(name => {
+      const selected = form.querySelector(`input[name="${name}"]:checked`);
+      const sg = form.querySelector(`[id^="sg-"]`) || document.querySelector(`#stars-${name.replace('_horaria','').replace('nota_','')}`)?.closest('.star-group');
+      if (!selected) {
+        valid = false;
+        // Highlight
+        const stars = form.querySelectorAll(`input[name="${name}"]`);
+        if (stars.length) {
+          stars[0].closest('.star-group').style.outline = '2px solid #c0392b';
+          stars[0].closest('.star-group').style.borderRadius = '8px';
+          setTimeout(() => stars[0].closest('.star-group').style.outline = '', 3000);
+        }
+      }
+    });
+
+    requiredLikert.forEach(name => {
+      const selected = form.querySelector(`input[name="${name}"]:checked`);
+      if (!selected) {
+        valid = false;
+        const inputs = form.querySelectorAll(`input[name="${name}"]`);
+        if (inputs.length) {
+          const container = inputs[0].closest('.likert-group');
+          container.style.outline = '2px solid #c0392b';
+          container.style.borderRadius = '8px';
+          setTimeout(() => { container.style.outline = ''; }, 3000);
+        }
+      }
+    });
+
+    if (!valid) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    try {
+      const data = new FormData(form);
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        document.getElementById('form-area').style.display = 'none';
+        document.getElementById('confirmacao').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Enviar Avaliação →';
+        alert('Erro ao enviar. Por favor, tente novamente.');
+      }
+    } catch(err) {
+      btn.disabled = false;
+      btn.textContent = 'Enviar Avaliação →';
+      alert('Erro de conexão. Verifique sua internet e tente novamente.');
+    }
+  });
+</script>
+
+</body>
+</html>
